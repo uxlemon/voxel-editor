@@ -51,6 +51,80 @@ function voxel_play_body_class($classes) {
 add_filter('body_class', 'voxel_play_body_class');
 
 /* ---------------------------------------------------------------------------
+ * SEO — document title, meta description, Open Graph / Twitter, JSON-LD.
+ * Automatically stands down if a dedicated SEO plugin (Yoast, Rank Math,
+ * AIOSEO, SEOPress) is active, so we never emit duplicate tags.
+ * ------------------------------------------------------------------------- */
+function voxel_play_seo_plugin_active() {
+    return defined('WPSEO_VERSION')        // Yoast
+        || defined('RANK_MATH_VERSION')    // Rank Math
+        || defined('SEOPRESS_VERSION')     // SEOPress
+        || function_exists('aioseo');      // All in One SEO
+}
+
+function voxel_play_setup() {
+    add_theme_support('title-tag');
+}
+add_action('after_setup_theme', 'voxel_play_setup');
+
+function voxel_play_seo_title($title) {
+    if (voxel_play_seo_plugin_active() || is_admin()) {
+        return $title;
+    }
+    return 'Voxel Play — Build & Share Voxel Art in Your Browser';
+}
+add_filter('pre_get_document_title', 'voxel_play_seo_title');
+
+function voxel_play_seo_head() {
+    if (voxel_play_seo_plugin_active() || is_admin()) {
+        return;
+    }
+    $title = 'Voxel Play — Build & Share Voxel Art in Your Browser';
+    $desc  = 'Create blocky 3D voxel art in your browser — no login. Build, remix, and share your creations in a community gallery. A free, MagicaVoxel-style voxel editor.';
+    $short = 'Create blocky 3D voxel art in your browser — no login. Build, remix, and share in a community gallery.';
+    $dist  = get_template_directory_uri() . '/dist';
+    $img   = $dist . '/og-image.png';
+    $icon  = $dist . '/favicon.svg';
+    $url   = home_url(isset($GLOBALS['wp']->request) && $GLOBALS['wp']->request ? '/' . $GLOBALS['wp']->request : '/');
+
+    $tags = array(
+        '<meta name="description" content="' . esc_attr($desc) . '" />',
+        '<meta name="robots" content="index, follow" />',
+        '<meta name="theme-color" content="#eef0f4" />',
+        '<link rel="icon" href="' . esc_url($icon) . '" type="image/svg+xml" />',
+        '<link rel="canonical" href="' . esc_url($url) . '" />',
+        '<meta property="og:type" content="website" />',
+        '<meta property="og:site_name" content="Voxel Play" />',
+        '<meta property="og:title" content="' . esc_attr($title) . '" />',
+        '<meta property="og:description" content="' . esc_attr($short) . '" />',
+        '<meta property="og:url" content="' . esc_url($url) . '" />',
+        '<meta property="og:image" content="' . esc_url($img) . '" />',
+        '<meta property="og:image:width" content="1200" />',
+        '<meta property="og:image:height" content="630" />',
+        '<meta name="twitter:card" content="summary_large_image" />',
+        '<meta name="twitter:title" content="' . esc_attr($title) . '" />',
+        '<meta name="twitter:description" content="' . esc_attr($short) . '" />',
+        '<meta name="twitter:image" content="' . esc_url($img) . '" />',
+    );
+    echo "\n" . implode("\n", $tags) . "\n";
+
+    $ld = array(
+        '@context'            => 'https://schema.org',
+        '@type'               => 'WebApplication',
+        'name'                => 'Voxel Play',
+        'description'         => $short,
+        'applicationCategory' => 'DesignApplication',
+        'operatingSystem'     => 'Web browser',
+        'browserRequirements' => 'Requires WebGL',
+        'url'                 => $url,
+        'image'               => $img,
+        'offers'              => array('@type' => 'Offer', 'price' => '0', 'priceCurrency' => 'USD'),
+    );
+    echo '<script type="application/ld+json">' . wp_json_encode($ld) . "</script>\n";
+}
+add_action('wp_head', 'voxel_play_seo_head', 1);
+
+/* ---------------------------------------------------------------------------
  * Community creations — stored in the WordPress database (custom post type)
  * and exposed via a small REST API the SPA talks to.
  * ------------------------------------------------------------------------- */
