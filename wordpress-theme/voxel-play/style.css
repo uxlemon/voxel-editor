@@ -1,0 +1,14 @@
+/*
+Theme Name: Voxel Play
+Theme URI: https://example.com/voxel-play
+Author: Voxel Play
+Description: A small browser voxel-creation game (Vite + Three.js) wrapped as a WordPress theme. Renders a full-page single-page app; all data is stored client-side (IndexedDB), so no PHP backend or database tables are required.
+Version: 1.0.0
+License: GPL-2.0-or-later
+Text Domain: voxel-play
+*/
+
+/* The app supplies its own styles via the enqueued bundle (assets/app.css).
+   These rules just make the SPA fill the WordPress page chrome cleanly. */
+html, body { margin: 0; padding: 0; }
+body.voxel-play-page #wpadminbar { display: none; }

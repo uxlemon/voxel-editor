@@ -1,0 +1,24 @@
+{
+  "name": "voxel-editor",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "description": "Browser-based voxel editor inspired by MagicaVoxel. Original code; reads/writes the .vox file format.",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "build:wp": "node scripts/build-wp-theme.mjs",
+    "preview": "vite preview"
+  },
+  "devDependencies": {
+    "@types/three": "0.171.0",
+    "playwright-core": "1.61.0",
+    "typescript": "^5.6.3",
+    "vite": "^6.0.3"
+  },
+  "dependencies": {
+    "@fortawesome/free-solid-svg-icons": "7.2.0",
+    "puppeteer-core": "25.1.0",
+    "three": "^0.171.0"
+  }
+}

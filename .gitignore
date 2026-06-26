@@ -1,0 +1,5 @@
+node_modules/
+dist/
+wordpress-theme/voxel-play/dist/
+wordpress-theme/voxel-play.zip
+.DS_Store
