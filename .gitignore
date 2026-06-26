@@ -3,3 +3,18 @@ dist/
 wordpress-theme/voxel-play/dist/
 wordpress-theme/voxel-play.zip
 .DS_Store
+*.log
+
+# Core WP (if ever in repo)
+/wp-admin/
+/wp-includes/
+/xmlrpc.php
+
+# Config
+wp-config.php
+
+# Uploads
+/wp-content/uploads/
+
+# htaccess
+/.htaccess
